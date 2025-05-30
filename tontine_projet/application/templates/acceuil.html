@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>TONTINE</title>
+
+    <style>
+      /* Style pour le body */
+      body {
+          margin: 0;
+          padding: 0;
+          background-image: url('https://previews.123rf.com/images/pongmoji/pongmoji1502/pongmoji150200021/36435872-fond-d-%C3%A9cran-int%C3%A9rieur-blanc-la-couleur-de-fond-texture.jpg');
+          background-size: cover;
+          background-repeat: no-repeat;
+          background-position: center;
+          min-height: 100vh;
+      }
+  
+      /* Style pour le formulaire */
+      .formulaire {
+          background-color: rgba(255, 255, 255, 0.8);
+          padding: 20px;
+          border-radius: 10px;
+          width: 300px;
+          margin: auto;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      }
+  
+      /* Style pour le texte */
+      h1, p {
+          text-align: center;
+      }
+      
+      /* Style pour le conteneur du graphique */
+      .chart-container {
+          background-color: rgba(255, 255, 255, 0.9);
+          border-radius: 10px;
+          padding: 20px;
+          margin: 20px auto;
+          max-width: 600px;
+          box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+      }
+      
+      .stats-title {
+          color: white;
+          text-align: center;
+          margin-top: 20px;
+          text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      }
+  </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">Acceuil</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Tontine
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'application:creer_cotisation_montant' montant=10000 %}"> tontine de 10.000 FCFA</a>
+              <a class="dropdown-item" href="{% url 'application:creer_cotisation_montant' montant=1500 %}"> tontine de présence</a>
+              <a class="dropdown-item" href="{% url 'application:creer_cotisation_montant' montant=2000 %}"> tontine de 2.000 FCFA</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dons
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'application:faire_don' 'solidarite' %}">Dons de solidarité</a>
+              <a class="dropdown-item" href="{% url 'application:faire_don' 'projet' %}">Dons pour les projets communs</a>
+              <a class="dropdown-item" href="{% url 'application:faire_don' 'ponctuel' %}">Dons financier unique</a>
+              <a class="dropdown-item" href="{% url 'application:faire_don' 'nature' %}">Dons en nature</a>
+            </div>
+          </li>
+         
+          <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Remboursement 
+              </a>
+              <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  {% comment %} <a class="dropdown-item" href="{% url 'application:demander_remboursement' %}">Demander de l'argent parmis une de ces  cotisation</a> {% endcomment %}
+                  <a class="dropdown-item" href="{% url 'application:demander_remboursement_pret' %}">procéder à un Remboursement de dette</a>
+              </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Effectuer un pret
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'application:demander_pret' %}">Avance sur cotisation </a>
+              <a class="dropdown-item" href="{% url 'application:demander_pret' %}">pret d'urgence</a>
+            </div>
+          </li>
+
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+               Tableau statistique
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{% url 'application:tableau_de_bord' %}">Voir les statstes de toute les activités entrepris au sein de l'application</a>
+            </div>
+          </li>
+        </ul>
+
+        <form class="form-inline my-2 my-lg-0">
+          <a class="btn btn-outline-success my-2 my-sm-0" href="{% url 'connexion' %}">Deconnexion</a>
+        </form> 
+      </div>
+    </nav>
+
+    <h2 class="stats-title">Mes Activités</h2>
+    
+    <div class="chart-container">
+      <canvas id="activitiesChart"></canvas>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script>
+      // Récupérer les données depuis le contexte Django
+      // Ces valeurs devraient être passées depuis votre vue
+      const ctx = document.getElementById('activitiesChart').getContext('2d');
+      
+      // Données par défaut (à remplacer par les données réelles)
+      const activitiesChart = new Chart(ctx, {
+        type: 'pie',
+        data: {
+          labels: ['Cotisations', 'Prêts', 'Dons', 'Remboursements'],
+          datasets: [{
+            data: [{{ total_cotisations|default:0 }}, 
+                   {{ total_prets|default:0 }}, 
+                   {{ total_dons|default:0 }}, 
+                   {{ total_remboursements|default:0 }}],
+            backgroundColor: [
+              'rgba(54, 162, 235, 0.7)',
+              'rgba(255, 99, 132, 0.7)',
+              'rgba(75, 192, 192, 0.7)',
+              'rgba(255, 206, 86, 0.7)'
+            ],
+            borderColor: [
+              'rgba(54, 162, 235, 1)',
+              'rgba(255, 99, 132, 1)',
+              'rgba(75, 192, 192, 1)',
+              'rgba(255, 206, 86, 1)'
+            ],
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            },
+            title: {
+              display: true,
+              text: 'Répartition de mes activités',
+              font: {
+                size: 16
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(context) {
+                  let label = context.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  label += context.formattedValue + ' FCFA';
+                  return label;
+                }
+              }
+            }
+          }
+        }
+      });
+    </script>
+  </body>
+</html>
+

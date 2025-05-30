@@ -1,0 +1,40 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Liste des remboursements</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Membre</th>
+                <th>Cotisation</th>
+                <th>Montant</th>
+                <th>Date demande</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for remboursement in remboursements %}
+            <tr>
+                <td>{{ remboursement.membre.username }}</td>
+                <td>{{ remboursement.cotisation.get_frequence_display }}</td>
+                <td>{{ remboursement.montant }}</td>
+                <td>{{ remboursement.date_demande|date:"d/m/Y" }}</td>
+                <td>{{ remboursement.get_statut_display }}</td>
+                <td>
+                    {% if remboursement.statut == 'P' %}
+                    <a href="{% url 'application:admin_valider_remboursement' remboursement.id %}" class="btn btn-success btn-sm">Valider</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'application:admin_tontine_dashboard' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> EXIT
+        </a>
+    </div>
+{% endblock %}

@@ -1,0 +1,42 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Détails de la cotisation</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Cotisation #{{ cotisation.id }}</h5>
+            <p class="card-text">
+                <strong>Membre:</strong> {{ cotisation.membre.username }}<br>
+                <strong>Montant:</strong> {{ cotisation.montant }}<br>
+                <strong>Fréquence:</strong> {{ cotisation.get_frequence_display }}<br>
+                <strong>Date début:</strong> {{ cotisation.date_debut|date:"d/m/Y" }}<br>
+                <strong>Statut:</strong> {% if cotisation.est_active %}Active{% else %}Inactive{% endif %}
+            </p>
+        </div>
+    </div>
+    
+    <h3>Membres concernés</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom d'utilisateur</th>
+                <th>Nom complet</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for membre in membres %}
+            <tr>
+                <td>{{ membre.username }}</td>
+                <td>{{ membre.first_name }} {{ membre.last_name }}</td>
+                <td>{{ membre.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    <a href="{% url 'application:admin_liste_cotisations' %}" class="btn btn-secondary">Retour</a>
+</div>
+{% endblock %}

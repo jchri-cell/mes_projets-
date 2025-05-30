@@ -1,0 +1,58 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Liste des cotisations</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Membre</th>
+                <th>Nom Tontine</th>
+                <th>Montant</th>
+                <th>Fréquence</th>
+                <th>Date début</th>
+                <th>Statut Paiement</th>
+                <th>Statut Validation</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cotisation in cotisations %}
+            <tr>
+                <td>{{ cotisation.membre.username }}</td>
+                <td>{{ cotisation.nom_tontine }}</td>
+                <td>{{ cotisation.montant }} FCFA</td>
+                <td>{{ cotisation.get_frequence_display }}</td>
+                <td>{{ cotisation.date_debut|date:"d/m/Y" }}</td>
+                <td>
+                    <span class="badge {% if cotisation.est_active %}bg-success{% else %}bg-warning{% endif %}">
+                        {% if cotisation.est_active %}Payé{% else %}En attente{% endif %}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge 
+                        {% if cotisation.statut == 'VAL' %}bg-success
+                        {% elif cotisation.statut == 'REF' %}bg-danger
+                        {% else %}bg-warning{% endif %}">
+                        {{ cotisation.get_statut_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'application:admin_detail_cotisation' cotisation.id %}" class="btn btn-info btn-sm">Détails</a>
+                    <a href="{% url 'application:admin_valider_cotisation' cotisation.id %}" class="btn btn-primary btn-sm">Valider</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" class="text-center">Aucune cotisation enregistrée</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'application:admin_tontine_dashboard' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> EXIT
+        </a>
+    </div>
+{% endblock %}
