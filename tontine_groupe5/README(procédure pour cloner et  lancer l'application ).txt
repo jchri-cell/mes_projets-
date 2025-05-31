@@ -10,7 +10,7 @@ pour lancer le projet suivez les étapes suivants dans l'ordre et à la lettre :
 	-vous pouvez voir le chemin d'accès où a été cloner le dossier avec la commande " pwd"
 			----- cette méthode est pour ceux qui ne dispose pas de GIT-----
 N.B : une autre méthode de cloner le dépôt serait de télécharger le fichier zip , pour ce faire :
- copier le lien " https://github.com/jchri-cell/tontine_groupe5 "  dans un navigateur et accéder au depot ,une fois dans le depot cliquer sur "tontine_groupe5", puis parmi les options de la bare de navigation il y'a une option "code" cliquer déçus , puis vous allez voir un bouton vert écris déçus "code" vous cliquez une nouvelle fois sur ca et là vous allez voir l'option "downloade zip"
+ _  parmi les options de la bare de navigation ( je parle dela barre de navigation qui est à l'extrême gauche tout en haut ) il y'a une option "code" cliquer déçus , puis vous allez voir un bouton vert écris déçus "code" vous cliquez une nouvelle fois sur ca et là vous allez voir l'option "downloade zip"
 
 
 2) une fois le dépôt cloner rendez vous sur MySQL workbench :
