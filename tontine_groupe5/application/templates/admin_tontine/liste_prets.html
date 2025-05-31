@@ -1,0 +1,64 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Liste des prêts</h1>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Emprunteur</th>
+                <th>Montant</th>
+                <th>Montant à rembourser</th>
+                <th>Période remboursement</th>
+                <th>Avaliseur</th>
+                <th>Date demande</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for pret in prets %}
+            <tr>
+                <td>{{ pret.emprunteur.get_full_name|default:pret.emprunteur.username }}</td>
+                <td>{{ pret.montant }} FCFA</td>
+                <td>{{ pret.montant_a_rembourser|default:"-" }} FCFA</td>
+                <td>{{ pret.get_periode_remboursement_display }}</td>
+                <td>
+                    {% if pret.avaliseur %}
+                        {{ pret.avaliseur.get_full_name|default:pret.avaliseur.username }}
+                    {% else %}
+                        -
+                    {% endif %}
+                </td>
+                <td>{{ pret.date_demande|date:"d/m/Y" }}</td>
+                <td>
+                    <span class="badge 
+                        {% if pret.statut == 'ACC' %}bg-success
+                        {% elif pret.statut == 'REF' %}bg-danger
+                        {% elif pret.statut == 'REM' %}bg-info
+                        {% else %}bg-warning{% endif %}">
+                        {{ pret.get_statut_display }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'application:admin_valider_pret' pret.id %}" class="btn btn-sm 
+                        {% if pret.statut == 'DEM' %}btn-success
+                        {% else %}btn-outline-secondary{% endif %}"
+                        {% if pret.statut != 'DEM' %}disabled{% endif %}>
+                        Valider
+                    </a>
+                    <a href="{% url 'application:admin_detail_remboursement_pret' pret.id %}" class="btn btn-info btn-sm">
+                        Détails
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="{% url 'application:admin_tontine_dashboard' %}" class="btn btn-success">
+        <i class="bi bi-plus-circle"></i> EXIT
+    </a>
+</div>
+{% endblock %}

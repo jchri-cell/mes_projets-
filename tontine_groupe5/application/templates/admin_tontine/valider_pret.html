@@ -1,0 +1,97 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Détails du prêt #{{ pret.id }}</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Informations de base</h5>
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Emprunteur:</strong> {{ pret.emprunteur.get_full_name|default:pret.emprunteur.username }}</p>
+                    <p><strong>Montant demandé:</strong> {{ pret.montant }} FCFA</p>
+                    <p><strong>Montant à rembourser:</strong> {{ pret.montant_a_rembourser|default:"-" }} FCFA</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Date demande:</strong> {{ pret.date_demande|date:"d/m/Y H:i" }}</p>
+                    <p><strong>Période remboursement:</strong> {{ pret.get_periode_remboursement_display }}</p>
+                    <p><strong>Statut:</strong> 
+                        <span class="badge 
+                            {% if pret.statut == 'ACC' %}bg-success
+                            {% elif pret.statut == 'REF' %}bg-danger
+                            {% elif pret.statut == 'REM' %}bg-info
+                            {% else %}bg-warning{% endif %}">
+                            {{ pret.get_statut_display }}
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Détails du prêt</h5>
+            <p><strong>Motif:</strong></p>
+            <div class="border p-3 mb-3">{{ pret.motif|linebreaks }}</div>
+            
+            <div class="row mt-3">
+                <div class="col-md-6">
+                    <p><strong>Avaliseur:</strong> 
+                        {% if pret.avaliseur %}
+                            {{ pret.avaliseur.get_full_name|default:pret.avaliseur.username }}
+                        {% else %}
+                            Non spécifié
+                        {% endif %}
+                    </p>
+                </div>
+                <div class="col-md-6">
+                    {% if pret.fichier_avaliseur %}
+                    <p><strong>Fichier avaliseur:</strong> 
+                        <a href="{{ pret.fichier_avaliseur.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            Voir le fichier
+                        </a>
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <p><strong>Informations avaliseur:</strong></p>
+            <div class="border p-3">{{ pret.infos_avaliseur|default:"Non fourni"|linebreaks }}</div>
+        </div>
+    </div>
+    
+    {% if pret.statut == 'DEM' %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Validation du prêt</h5>
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="commentaire" class="form-label">Commentaire (optionnel)</label>
+                    <textarea class="form-control" id="commentaire" name="commentaire" rows="3"></textarea>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button type="submit" class="btn btn-success" name="action" value="valider">
+                        <i class="bi bi-check-circle"></i> Valider le prêt
+                    </button>
+                    <button type="submit" class="btn btn-danger" name="action" value="refuser">
+                        <i class="bi bi-x-circle"></i> Refuser le prêt
+                    </button>
+                    <a href="{% url 'application:admin_liste_prets' %}" class="btn btn-secondary">
+                        <i class="bi bi-arrow-left"></i> Retour
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% else %}
+    <div class="d-flex justify-content-end">
+        <a href="{% url 'application:admin_liste_prets' %}" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Retour à la liste
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

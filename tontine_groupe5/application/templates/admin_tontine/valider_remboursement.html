@@ -1,0 +1,27 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Valider un remboursement</h1>
+    
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Remboursement #{{ remboursement.id }}</h5>
+            <p class="card-text">
+                <strong>Membre:</strong> {{ remboursement.membre.username }}<br>
+                <strong>Cotisation:</strong> {{ remboursement.cotisation.get_frequence_display }}<br>
+                <strong>Montant:</strong> {{ remboursement.montant }}<br>
+                <strong>Date demande:</strong> {{ remboursement.date_demande|date:"d/m/Y" }}<br>
+                <strong>Statut:</strong> {{ remboursement.get_statut_display }}
+            </p>
+        </div>
+    </div>
+    
+    <form method="post">
+        {% csrf_token %}
+        <p>Êtes-vous sûr de vouloir valider ce remboursement ?</p>
+        <button type="submit" class="btn btn-success">Confirmer la validation</button>
+        <a href="{% url 'application:admin_liste_remboursements' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

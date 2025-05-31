@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'acceuil' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> EXIT
+        </a>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3 bg-gradient-primary text-white">
+            <h4 class="m-0 font-weight-bold">Historique des remboursements de prêts</h4>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
+                    <thead class="thead-light">
+                        <tr>
+                            <th>Date</th>
+                            <th>Prêt</th>
+                            <th>Montant remboursé</th>
+                            <th>Reste à rembourser</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for remboursement in remboursements %}
+                        <tr>
+                            <td>{{ remboursement.date_demande|date:"d/m/Y" }}</td>
+                            <td>Prêt #{{ remboursement.pret.id }}</td>
+                            <td>{{ remboursement.montant }} FCFA</td>
+                            <td>{{ remboursement.pret.reste_a_rembourser }} FCFA</td>
+                            <td>
+                                <span class="badge 
+                                    {% if remboursement.statut == 'A' %}badge-success
+                                    {% elif remboursement.statut == 'R' %}badge-danger
+                                    {% else %}badge-warning{% endif %}">
+                                    {{ remboursement.get_statut_display }}
+                                </span>
+                            </td>
+                            <td>
+                                {% if remboursement.statut == 'P' %}
+                                <a href="#" class="btn btn-sm btn-info">Modifier</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">Aucun remboursement de prêt enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .card {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .table {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+    .badge {
+        padding: 8px 12px;
+        font-size: 14px;
+        border-radius: 20px;
+    }
+    .badge-success {
+        background-color: #1cc88a;
+    }
+    .badge-warning {
+        background-color: #f6c23e;
+        color: #000;
+    }
+    .badge-danger {
+        background-color: #e74a3b;
+    }
+    .btn-sm {
+        border-radius: 8px;
+        padding: 5px 10px;
+    }
+</style>
+{% endblock %}
