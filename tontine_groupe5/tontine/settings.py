@@ -77,7 +77,7 @@ WSGI_APPLICATION = 'tontine.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'tontine',          # Nom de votre base de données
+        'NAME': 'tontine_groupe5',          # Nom de votre base de données
         'USER': 'junior1',    # Remplacez par votre vrai nom d'utilisateur MySQL
         'PASSWORD': 'junior23',        # Remplacez par votre vrai mot de passe
         'HOST': 'localhost',            # Ou l'adresse IP de votre serveur MySQL

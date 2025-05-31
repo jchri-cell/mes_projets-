@@ -17,8 +17,6 @@ N.B : une autre méthode de cloner le dépôt serait de télécharger le fichier
 	- une fois dans MySQL workbench connectez vous avec votre compte(serveur) comme d'habitude
 	- ouvrer une nouvelle page vide puis copier et  executer tout le bloc suivant :
 
-
-                create database tontine_groupe5; 
                 CREATE DATABASE tontine_groupe5 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
                 CREATE USER 'junior1'@'localhost' IDENTIFIED BY 'junior23';
                 GRANT ALL PRIVILEGES ON tontine_groupe5.* TO 'junior1'@'localhost';
