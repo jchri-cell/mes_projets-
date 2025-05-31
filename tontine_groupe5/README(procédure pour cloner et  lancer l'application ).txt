@@ -9,7 +9,8 @@ pour lancer le projet suivez les étapes suivants dans l'ordre et à la lettre :
 	-en suite chercher dans votre pc l'emplacement du fichier tontine_groupe5
 	-vous pouvez voir le chemin d'accès où a été cloner le dossier avec la commande " pwd"
 			----- cette méthode est pour ceux qui ne dispose pas de GIT-----
-N.B : une autre méthode de cloner le dépôt serait de télécharger le fichier zip , pour ce faire copier le lien " https://github.com/jchri-cell/tontine_groupe5 "  dans un navigateur et accéder au depot ,une fois dans le depot cliquer sur "tontine_groupe5", puis parmi les options de la bare de navigation il y'a une option "code" cliquer déçus , puis vous allez voir un bouton vert écris déçus "code" vous cliquez une nouvelle fois sur ca et là vous allez voir l'option "downloade zip"
+N.B : une autre méthode de cloner le dépôt serait de télécharger le fichier zip , pour ce faire :
+ copier le lien " https://github.com/jchri-cell/tontine_groupe5 "  dans un navigateur et accéder au depot ,une fois dans le depot cliquer sur "tontine_groupe5", puis parmi les options de la bare de navigation il y'a une option "code" cliquer déçus , puis vous allez voir un bouton vert écris déçus "code" vous cliquez une nouvelle fois sur ca et là vous allez voir l'option "downloade zip"
 
 
 2) une fois le dépôt cloner rendez vous sur MySQL workbench :
@@ -31,3 +32,5 @@ N.B : une autre méthode de cloner le dépôt serait de télécharger le fichier
 	-puis vous ouvrez le terminal dans vs code et vous saisissez la commande suivante " python manage.py makemigrations "
 	- en suite tapez la commande suivante " python manage.py migrate  " 
 	-une fois les migrations effectués vous pouvez lancez l'application avec la commande " python manage.py runserver " 
+
+N.B: après avoir fait les migrations , allez dans MySQL workbench et faite un "refresh" afin de voir toute les tables  de la base de donnée
