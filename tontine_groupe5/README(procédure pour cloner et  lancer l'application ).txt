@@ -5,7 +5,7 @@ pour lancer le projet suivez les étapes suivants dans l'ordre et à la lettre :
 
 			----cette méthode est pour ceux qui ont l'appli  GIT sur leur pc ----
 	-avant de pouvoir cloner vous devez nécessairement avoir l'application "GiT BASH" sur votre PC  à fin de pouvoir taper les commandes 
-	-ouvrez git Bash en tant que administrateur et saisissez la commande suivante "  git clone  https://github.com/jchri-cell/tontine_groupe5 "
+	-ouvrez git Bash en tant que administrateur et saisissez la commande suivante "  git clone  https://github.com/jchri-cell/tontine_groupe5.git "
 	-en suite chercher dans votre pc l'emplacement du fichier tontine_groupe5
 	-vous pouvez voir le chemin d'accès où a été cloner le dossier avec la commande " pwd"
 			----- cette méthode est pour ceux qui ne dispose pas de GIT-----
