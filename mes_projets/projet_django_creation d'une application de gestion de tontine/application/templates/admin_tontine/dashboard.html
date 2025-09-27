@@ -1,0 +1,212 @@
+{% extends 'bas.html' %}
+
+{% block content %}
+<div class="container">
+    <h1>Tableau de bord - Administrateur Tontine</h1>
+    
+    <div class="row mt-4">
+        <div class="col-md-3">
+            <div class="card text-white bg-primary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Membres</h5>
+                    <p class="card-text">{{ total_membres }}</p>
+                    <a href="{% url 'application:admin_liste_membres' %}" class="text-white">Voir tous</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-success mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Cotisations</h5>
+                    <p class="card-text">{{ total_cotisations }}</p>
+                    <a href="{% url 'application:admin_liste_cotisations' %}" class="text-white">Voir toutes</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-info mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Prêts</h5>
+                    <p class="card-text">{{ total_prets }}</p>
+                    <a href="{% url 'application:admin_liste_prets' %}" class="text-white">Voir tous</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card text-white bg-warning mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Dons</h5>
+                    <p class="card-text">{{ total_dons }}</p>
+                    <a href="{% url 'application:admin_liste_dons' %}" class="text-white">Voir tous</a>
+                </div>
+            </div>
+        </div>
+        <!-- Nouvelle carte pour les remboursements -->
+        <div class="col-md-3">
+            <div class="card text-white bg-secondary mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">Demandes de remboursement</h5>
+                    <p class="card-text">{{ total_remboursements }}</p>
+                    <a href="{% url 'application:admin_liste_remboursements_pret' %}" class="text-white">Voir toutes</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Nouvelle section pour les diagrammes circulaires -->
+    <div class="row mt-4">
+        <!-- Diagramme des âges -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Répartition par âge</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="ageChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramme des types de tontines -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>Types de tontines</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="tontineChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Diagramme des types de dons -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-warning text-white">
+                    <h5>Types de dons</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="donChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Script pour les diagrammes -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Diagramme des âges
+const ageCtx = document.getElementById('ageChart').getContext('2d');
+
+    const ageChart = new Chart(ageCtx, {
+    type: 'pie',
+    data: {
+        labels: ['18-25 ans', '26-35 ans', '36-45 ans', '46+ ans'],
+        datasets: [{
+            data: {{ age_data|safe }},
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'bottom',
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        const label = context.label || '';
+                        const value = context.raw || 0;
+                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                        const percentage = Math.round((value / total) * 100);
+                        return `${label}: ${percentage}% (${value} membres)`;
+                    }
+                }
+            }
+        }
+    }
+});
+    // Diagramme des types de tontines
+    const tontineCtx = document.getElementById('tontineChart').getContext('2d');
+    const tontineChart = new Chart(tontineCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Tontine de 10.000 FCFA', 'Tontine de 2.000 FCFA', 'Tontine de Présence'],
+        datasets: [{
+            data: {{ tontine_data|safe }},
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${percentage}% (${value} cotisations)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Diagramme des types de dons
+    const donCtx = document.getElementById('donChart').getContext('2d');
+    const donChart = new Chart(donCtx, {
+    type: 'pie',
+    data: {
+        labels: ['Solidarité', 'Projets', 'Financier', 'Nature'],
+        datasets: [{
+            data: {{ don_data|safe }},
+            backgroundColor: [
+                '#FF6384',
+                '#36A2EB',
+                '#FFCE56',
+                '#4BC0C0'
+            ],
+            borderWidth: 1
+        }]
+    },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                            const percentage = Math.round((value / total) * 100);
+                            return `${label}: ${percentage}% (${value} dons)`;
+                        }
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

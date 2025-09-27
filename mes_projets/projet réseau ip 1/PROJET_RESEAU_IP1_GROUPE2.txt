@@ -1,0 +1,228 @@
+//dans notre projet on a 3 sites et dans chaque site on a un routeur et un switch , donc  au totale on dénombre  3 routeurs et 3 switches pour les 3 sites //
+
+
+
+
+1- SITE 1 
+
+         a- SWITCH
+         
+//configuration  au niveau du switch//
+Switch1>enable
+Switch1#conf t 
+Switch1(config)#vlan 10 
+Switch1(config-vlan)#name vlan1O
+Switch1(config-vlan)#exit
+Switch1(config)#vlan 20
+Switch1(config-vlan)#name vlan20
+Switch1(config-vlan)#exit
+Switch1(config)#vlan 30
+Switch1(config-vlan)#name vlan30
+Switch1(config-vlan)#exit
+
+Switch1(config)#interface fa0/2
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 10
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/3
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 10
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/4
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 20
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/5
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 20
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/6
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 30
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/7
+Switch1(config-if)#switchport mode access
+Switch1(config-if)#switchport access vlan 30
+Switch1(config-if)#exit
+
+Switch1(config)#int fa0/1
+Switch1(config-if)#no shutdown
+Switch1(config-if)#switchport mode trunk
+Switch1(config-if)#exit
+Switch1(config)#exit
+
+
+           b- ROUTEUR
+
+//adressage des interfaces: GigabitEthernet et de la sous-interface pour le vlan 10,20,30//
+R1>en
+R1#config t
+R1(config)#interface GigabitEthernet0/0
+R1(config-if)#no sh
+R1(config-if)#ip address 192.168.1.134 255.255.255.252
+R1(config-if)#exit
+
+R1(config)#interface GigabitEthernet0/1
+R1(config-if)#no sh
+R1(config-if)#ip address 192.168.1.130 255.255.255.252
+R1(config-if)#exit
+
+R1(config)#interface GigabitEthernet0/2
+R1(config-if)#no sh
+R1(config-if)#interface GigabitEthernet0/2.10
+R1(config-subif)#encapsulation dot1Q 10
+R1(config-subif)# ip address 192.168.0.1 255.255.255.192
+R1(config-subif)#exit
+
+R1(config)#interface GigabitEthernet0/2.20
+R1(config-subif)# encapsulation dot1Q 20
+R1(config-subif)# ip address 192.168.0.65 255.255.255.192
+R1(config-subif)#exit
+
+R1(config)#interface GigabitEthernet0/2.30
+R1(config-subif)# encapsulation dot1Q 30
+R1(config-subif)# ip address 192.168.0.129 255.255.255.192
+R1(config-subif)#exit
+R1(config)#exit
+R1#exit
+
+//routage dynamique ospf//
+R1>en
+R1#conf t
+R1(config)#router ospf 1
+R1(config-router)#router-id 0.0.0.1
+R1(config-router)#network 192.168.0.0 0.0.0.63 area 0
+R1(config-router)#network 192.168.0.64 0.0.0.63 area 0
+R1(config-router)#network 192.168.0.128 0.0.0.63 area 0
+R1(config-router)#network 192.168.1.128 0.0.0.3 area 0
+R1(config-router)#network 192.168.1.132 0.0.0.3 area 0
+R1(config-router)#exit
+R1(config)#exit
+R1#
+
+
+
+
+2- SITE 2 
+
+         a- SWITCH
+         
+//configuration  au niveau du switch//
+Switch2>enable
+Switch2#conf t
+Switch2(config)#vlan 40 
+Switch2(config-vlan)#name vlan40
+Switch2(config-vlan)#exit
+Switch2(config)#vlan 50
+Switch2(config-vlan)#name vlan50
+Switch2(config-vlan)#exit 
+
+Switch2(config)#interface Fa0/2
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 40
+Switch2(config-if)#exit
+
+Switch2(config)#int fa0/3
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 40
+Switch2(config-if)#exit
+
+Switch2(config)#int fa0/4
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 50
+Switch2(config-if)#exit
+
+Switch2(config)#int fa0/5
+Switch2(config-if)#switchport mode access
+Switch2(config-if)#switchport access vlan 50
+Switch2(config-if)#exit
+
+
+Switch2(config)#int fa0/1
+Switch2(config-if)#switchport mode trunk
+Switch2(config-if)#
+
+
+
+                  b- ROUTEUR 
+
+//adressage des interfaces: gigabitEthernet et de la sous-interface pour le vlan 40 et 50//
+R2>en
+R2#config t
+R2(config)#interface GigabitEthernet0/0
+R2(config-if)#no sh
+R2(config-if)#ip address 192.168.1.137 255.255.255.252
+R2(config-if)#exit 
+R2(config)#interface GigabitEthernet0/1
+R2(config-if)#no sh
+R2(config-if)#ip address 192.168.1.129 255.255.255.252
+R2(config-if)#exit
+R2(config)#int gi0/2
+R2(config-if)#int gi0/2.40
+R2(config-subif)#encapsulation dot1Q 40
+R2(config-subif)#ip address 192.168.1.1 255.255.255.192
+R2(config-subif)#exit
+R2(config-if)#int gi0/2.50
+R2(config-subif)#encapsulation dot1Q 50
+R2(config-subif)#ip address 192.168.1.65 255.255.255.192
+R2(config-subif)#exit
+
+//routage dynamique ospf//
+R2>en
+R2#conf t
+R2(config)#router ospf 1
+R2(config-router)#router-id 0.0.0.2
+R2(config-router)#network 192.168.1.0 0.0.0.63 area 0
+R2(config-router)#network 192.168.1.64 0.0.0.63 area 0
+R2(config-router)#network 192.168.1.128 0.0.0.3 area 0
+R2(config-router)#network 192.168.1.136 0.0.0.3 area 0
+R2(config-router)#exit
+R2(config)#exit
+R2#
+
+
+
+3- SITE 3
+
+         	  a- SWITCH
+         
+//au niveau du switch appartenant au site 3  aucune commande n'a été configuré car il y'a pas de VLAN vu qu'on a qu'un departement //
+
+                  b- ROUTEUR 
+
+//adressage des interfaces: gigabitEthernet //
+R3>en
+R3#config t
+R3(config)#int gi0/0
+R3(config-if)#no sh
+R3(config-if)# ip address 192.168.1.133 255.255.255.192
+R3(config-if)#Exit
+R3(config)#int gi0/1
+R3(config-if)#no sh
+R3(config-if)#ip address 192.168.1.138 255.255.255.252
+R3(config-if)#Exit
+R3(config)#int gi0/2
+R3(config-if)#no sh
+R3(config-if)#ip address 192.168.0.193 255.255.255.252
+R3(config-if)#Exit
+
+
+//routage dynamique ospf//
+R3>en
+R3#conf t
+R3(config)#router ospf 1
+R3(config-router)#router-id 0.0.0.3
+R3(config-router)# network 192.168.0.192 0.0.0.63 area 0
+R3(config-router)#network 192.168.1.132 0.0.0.3 area 0
+R3(config-router)#network 192.168.1.136 0.0.0.3 area 0
+R3(config-router)#exit
+R3(config)#exit
+R3#
+
+
+

@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Liste des membres</h2>
+    <a href="{% url 'application:ajouter_membre' %}" class="btn btn-primary mb-3">Ajouter un membre</a>
+    
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Âge</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for membre in membres %}
+            <tr>
+                <td>{{ membre.user.last_name }}</td>
+                <td>{{ membre.user.first_name }}</td>
+                <td>{{ membre.user.email }}</td>
+                <td>{{ membre.age }}</td>
+                <td>
+                    <a href="{% url 'application:modifier_membre' membre.user.id %}" class="btn btn-sm btn-warning">Modifier</a>
+                    <a href="{% url 'application:supprimer_membre' membre.user.id %}" class="btn btn-sm btn-danger">Supprimer</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

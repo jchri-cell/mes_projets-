@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Supprimer le membre</h2>
+    <div class="alert alert-warning">
+        <p>Êtes-vous sûr de vouloir supprimer le membre :</p>
+        <p><strong>{{ membre.user.first_name }} {{ membre.user.last_name }}</strong> ?</p>
+        <p>Cette action est irréversible.</p>
+    </div>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Confirmer la suppression</button>
+        <a href="{% url 'application:liste_membres' %}" class="btn btn-secondary">Annuler</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Tableau de Bord</h2>
+    
+    <!-- Cartes de résumé améliorées -->
+    <div class="row mb-4">
+        <!-- Carte Cotisations -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-primary text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Cotisations</h5>
+                        <i class="bi bi-wallet2 fs-4"></i>
+                    </div>
+                    <h2>{{ total_cotisations|floatformat:0 }} FCFA</h2>
+                    <div class="d-flex justify-content-between">
+                        <span>{{ cotisations_actives }} active(s)</span>
+                        <span>{{ cotisations_payees }} payée(s)</span>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-light" style="width: {{ pourcentage_cotisations }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carte Prêts -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-success text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Prêts</h5>
+                        <i class="bi bi-cash-coin fs-4"></i>
+                    </div>
+                    <h2>{{ total_prets|floatformat:0 }} FCFA</h2>
+                    <div class="d-flex justify-content-between">
+                        <span>{{ prets_en_cours }} en cours</span>
+                        <span>{{ prets_rembourses }} remboursé(s)</span>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-light" style="width: {{ pourcentage_prets }}%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carte Dons -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-info text-white h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Dons</h5>
+                        <i class="bi bi-gift fs-4"></i>
+                    </div>
+                    <h2>{{ total_dons|floatformat:0 }} FCFA</h2>
+                    <p class="card-text">{{ dons_count }} contribution(s)</p>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-light" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Carte Remboursements -->
+        <div class="col-md-3 mb-3">
+            <div class="card bg-warning text-dark h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="card-title">Remboursements</h5>
+                        <i class="bi bi-arrow-left-right fs-4"></i>
+                    </div>
+                    <h2>{{ total_remboursements|floatformat:0 }} FCFA</h2>
+                    <div class="d-flex justify-content-between">
+                        <span>{{ remboursements_tontine }} tontine</span>
+                        <span>{{ remboursements_pret }} prêt</span>
+                    </div>
+                    <div class="progress mt-2" style="height: 5px;">
+                        <div class="progress-bar bg-dark" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Graphiques et visualisations -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5>Répartition des Activités</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="repartitionChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5>Évolution des Prêts</h5>
+                </div>
+                <div class="card-body">
+                    <canvas id="evolutionPretsChart" height="250"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Activités récentes améliorées -->
+    <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">Activités Récentes (30 derniers jours)</h5>
+                <span class="badge bg-light text-dark">{{ activites_recentes|length }} activité(s)</span>
+            </div>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Type</th>
+                            <th>Montant</th>
+                            <th>Date</th>
+                            <th>Statut</th>
+                            <th>Détails</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for activite in activites_recentes %}
+                        <tr>
+                            <td>
+                                <span class="badge 
+                                    {% if activite.type == 'Cotisation' %}bg-primary
+                                    {% elif activite.type == 'Prêt' %}bg-success
+                                    {% elif activite.type == 'Don' %}bg-info
+                                    {% else %}bg-warning text-dark{% endif %}">
+                                    {{ activite.type }}
+                                </span>
+                            </td>
+                            <td>{{ activite.montant }} FCFA</td>
+                            <td>{{ activite.date|date:"d/m/Y" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if activite.statut == 'Validé' or activite.statut == 'Accepté' or activite.statut == 'Approuvé' %}bg-success
+                                    {% elif activite.statut == 'En attente' or activite.statut == 'Demande en cours' %}bg-warning text-dark
+                                    {% else %}bg-danger{% endif %}">
+                                    {{ activite.statut }}
+                                </span>
+                            </td>
+                            <td>{{ activite.details|truncatechars:30 }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center py-4">Aucune activité récente</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Liens rapides améliorés -->
+    <div class="row">
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'application:creer_cotisation' %}" class="btn btn-primary btn-block py-3">
+                <i class="bi bi-plus-circle me-2"></i> Nouvelle Cotisation
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'application:demander_pret' %}" class="btn btn-success btn-block py-3">
+                <i class="bi bi-cash-stack me-2"></i> Demander un Prêt
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <a href="{% url 'application:faire_don' 'ponctuel' %}" class="btn btn-info text-white btn-block py-3">
+                <i class="bi bi-gift me-2"></i> Faire un Don
+            </a>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="dropdown">
+                <button class="btn btn-warning btn-block py-3 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-arrow-left-right me-2"></i> Remboursements
+                </button>
+                <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="{% url 'application:demander_remboursement' %}">Remboursement Tontine</a></li>
+                    <li><a class="dropdown-item" href="{% url 'application:demander_remboursement_pret' %}">Remboursement Prêt</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Scripts pour les graphiques -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Graphique de répartition
+    const repartitionCtx = document.getElementById('repartitionChart').getContext('2d');
+    const repartitionChart = new Chart(repartitionCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Cotisations', 'Prêts', 'Dons', 'Remboursements'],
+            datasets: [{
+                data: [
+                    {{ total_cotisations }},
+                    {{ total_prets }},
+                    {{ total_dons }},
+                    {{ total_remboursements }}
+                ],
+                backgroundColor: [
+                    '#0d6efd', // Bleu
+                    '#198754', // Vert
+                    '#0dcaf0', // Cyan
+                    '#ffc107'  // Jaune
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+
+    // Graphique d'évolution des prêts
+    const evolutionCtx = document.getElementById('evolutionPretsChart').getContext('2d');
+    const evolutionChart = new Chart(evolutionCtx, {
+        type: 'line',
+        data: {
+            labels: {{ mois|safe }},
+            datasets: [{
+                label: 'Montant des prêts (FCFA)',
+                data: {{ montants_prets|safe }},
+                fill: false,
+                borderColor: '#198754',
+                tension: 0.1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

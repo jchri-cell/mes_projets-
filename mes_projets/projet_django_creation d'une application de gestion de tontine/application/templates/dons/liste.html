@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="{% url 'acceuil' %}" class="btn btn-success">
+            <i class="bi bi-plus-circle"></i> EXIT
+        </a>
+    </div>
+    <h2>Liste des Dons</h2>
+
+    <!-- Display the Total -->
+    <h4>Total des Dons: {{ total }} FCFA</h4>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Montant</th>
+                <th>Type de Don</th>
+                <th>Moyen de Paiement</th>
+                <th>Date</th>
+                <th>Message</th>
+                <th>Statut</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for don in dons %}
+            <tr>
+                <td>{{ don.montant }} FCFA</td>
+                <td>
+                    {% if don.type_don == 'Dons de solidarite' %}
+                        Dons de solidarite
+                    {% elif don.type_don == 'Dons pour les projets communs' %}
+                        Dons pour les projets communs
+                    {% elif don.type_don == 'Dons financier unique' %}
+                        Dons financier unique
+                    {% elif don.type_don == 'Dons en nature' %}
+                        Dons en nature
+                    {% endif %}
+                </td>
+                <td>{% if don.moyen_paiement %}{{ don.moyen_paiement }}{% else %}N/A{% endif %}</td>
+                <td>{{ don.date|date:"d/m/Y H:i" }}</td>
+                <td>{{ don.message }}</td>
+                <td>
+                    <span class="badge 
+                        {% if don.statut == 'VAL' %}badge-success
+                        {% elif don.statut == 'REF' %}badge-danger
+                        {% else %}badge-warning{% endif %}">
+                        {{ don.get_statut_display }}
+                    </span>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" class="text-center">Aucun don enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
