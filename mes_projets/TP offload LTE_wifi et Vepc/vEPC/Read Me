@@ -1,0 +1,7 @@
+//Follow Steps 1 and 2 to simulate the program
+//1-Pass settings to simulation program
+sudo ./waf --command-template="%s --ns3::ConfigStore::Filename=defaultParameters.txt --ns3::ConfigStore::Mode=Load --ns3::ConfigStore::FileFormat=RawText" --run scratch/vEPC_Source_Code
+
+//2-Generate template input file and simulate with visualizer(PyViz)
+sudo ./waf --command-template="%s --ns3::ConfigStore::Filename=scratch/defaultParameters.txt --ns3::ConfigStore::Mode=Save --ns3::ConfigStore::FileFormat=RawText" --run scratch/vEPC_Source_Code --vis
+
